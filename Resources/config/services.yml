@@ -1,0 +1,14 @@
+parameters:
+    andres_montanez_fragment_cache.listener.class: AndresMontanez\FragmentCacheBundle\EventListener\FragmentCacheListener
+    andres_montanez_fragment_cache.file_cache_service.class: AndresMontanez\FragmentCacheBundle\Service\FileCacheService
+
+services:
+    andres_montanez_fragment_cache.file_cache_service:
+        class: %andres_montanez_fragment_cache.file_cache_service.class%
+        arguments: [%kernel.cache_dir%]
+
+    andres_montanez_fragment_cache.listener:
+        class: %andres_montanez_fragment_cache.listener.class%
+        arguments: [@event_dispatcher, %kernel.environment%, %kernel.debug%, %andres_montanez_fragment_cache.enabled%, @andres_montanez_fragment_cache.cache_service]
+        tags:
+            - { name: kernel.event_subscriber }

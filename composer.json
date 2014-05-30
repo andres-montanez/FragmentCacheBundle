@@ -1,0 +1,23 @@
+{
+    "name": "andres-montanez/fragment-cache-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony2 bundle for Fragment Caching",
+    "keywords": ["cache"],
+    "homepage": "https://github.com/andres-montanez/FragmentCacheBundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andrés Montañez",
+            "email": "andres@andresmontanez.com",
+            "homepage": "http://andresmontanez.com"
+        }
+    ],
+    "require": {
+        "php":                       ">=5.3.3",
+        "symfony/framework-bundle":  ">=2.3.0"
+    },
+    "autoload": {
+        "psr-0": { "AndresMontanez\\FragmentCacheBundle": "" }
+    },
+    "target-dir": "AndresMontanez/FragmentCacheBundle"
+}
