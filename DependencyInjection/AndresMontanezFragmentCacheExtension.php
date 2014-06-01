@@ -28,9 +28,6 @@ class AndresMontanezFragmentCacheExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
-
         // Set Fragment Cache disabled by default
         if (!$container->hasParameter('andres_montanez_fragment_cache.enabled')) {
             $container->setParameter('andres_montanez_fragment_cache.enabled', false);

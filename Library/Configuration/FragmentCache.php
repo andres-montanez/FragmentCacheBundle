@@ -29,7 +29,7 @@ class FragmentCache extends ConfigurationAnnotation
 
     /**
      * Version of the Fragment
-     * @var itneger
+     * @var integer
      */
     protected $version;
 
