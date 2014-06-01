@@ -1,0 +1,11 @@
+composer.phar
+
+vendor
+.idea
+
+## generic files to ignore
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out

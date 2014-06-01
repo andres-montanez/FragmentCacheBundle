@@ -20,17 +20,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationAnnotation;
  */
 class FragmentCache extends ConfigurationAnnotation
 {
-	/**
-	 * Expiration time in minutes
-	 *
-	 * @var integer
-	 */
-	protected $expiration;
+    /**
+     * Expiration time in minutes
+     *
+     * @var integer
+     */
+    protected $expiration;
 
-	/**
-	 * Version of the Fragment
-	 * @var itneger
-	 */
+    /**
+     * Version of the Fragment
+     * @var itneger
+     */
     protected $version;
 
     /**
@@ -46,7 +46,7 @@ class FragmentCache extends ConfigurationAnnotation
      */
     public function getExpiration()
     {
-    	return (integer) $this->expiration;
+        return (integer)$this->expiration;
     }
 
     /**
@@ -56,12 +56,12 @@ class FragmentCache extends ConfigurationAnnotation
      */
     public function setExpiration($expiration)
     {
-    	if (!is_numeric($expiration)) {
-    		$expiration = 1;
-    	}
+        if (!is_numeric($expiration)) {
+            $expiration = 1;
+        }
 
-    	$this->expiration = $expiration;
-    	return $this;
+        $this->expiration = $expiration;
+        return $this;
     }
 
     /**
@@ -70,7 +70,7 @@ class FragmentCache extends ConfigurationAnnotation
      */
     public function getVersion()
     {
-    	return (integer) $this->version;
+        return (integer)$this->version;
     }
 
     /**
@@ -80,12 +80,12 @@ class FragmentCache extends ConfigurationAnnotation
      */
     public function setVersion($version)
     {
-    	if (!is_numeric($version)) {
-    		$version = 1;
-    	}
+        if (!is_numeric($version)) {
+            $version = 1;
+        }
 
-    	$this->version = $version;
-    	return $this;
+        $this->version = $version;
+        return $this;
     }
 
     /**
@@ -94,7 +94,7 @@ class FragmentCache extends ConfigurationAnnotation
      */
     public function getOptions()
     {
-    	return $this->options;
+        return $this->options;
     }
 
     /**
@@ -104,12 +104,12 @@ class FragmentCache extends ConfigurationAnnotation
      */
     public function setOptions($options)
     {
-    	if (!is_array($options)) {
-    		$options = array();
-    	}
+        if (!is_array($options)) {
+            $options = array();
+        }
 
-    	$this->options = $options;
-    	return $this;
+        $this->options = $options;
+        return $this;
     }
 
     /**

@@ -33,10 +33,10 @@ class AndresMontanezFragmentCacheExtension extends Extension
 
         // Set Fragment Cache disabled by default
         if (!$container->hasParameter('andres_montanez_fragment_cache.enabled')) {
-        	$container->setParameter('andres_montanez_fragment_cache.enabled', false);
+            $container->setParameter('andres_montanez_fragment_cache.enabled', false);
         }
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
     }
 }

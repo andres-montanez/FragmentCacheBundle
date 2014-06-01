@@ -17,22 +17,22 @@ namespace AndresMontanez\FragmentCacheBundle\Library;
  */
 interface CacheServiceInterface
 {
-	/**
-	 * Gets a Cached Value by it's Key
-	 *
-	 * @param string $key
-	 * @return mixed
-	 */
-	public function get($key);
+    /**
+     * Gets a Cached Value by it's Key
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function get($key);
 
-	/**
-	 * Stores a Value on the Cache with a Key
-	 *
-	 * @param string $key
-	 * @param mixed $value
-	 * @param integer $expiration
-	 * @return boolean
-	 */
-	public function set($key, $value, $expiration = 0);
+    /**
+     * Stores a Value on the Cache with a Key
+     *
+     * @param string $key
+     * @param mixed $value
+     * @param integer $expiration
+     * @return boolean
+     */
+    public function set($key, $value, $expiration = 0);
 
 }

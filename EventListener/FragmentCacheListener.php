@@ -29,32 +29,32 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class FragmentCacheListener implements EventSubscriberInterface
 {
-	/**
-	 * Event Dispatcher
-	 *
-	 * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-	 */
-	protected $dispatcher;
+    /**
+     * Event Dispatcher
+     *
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     */
+    protected $dispatcher;
 
-	/**
-	 * Current Environment
-	 *
-	 * @var string
-	 */
-	protected $environment;
+    /**
+     * Current Environment
+     *
+     * @var string
+     */
+    protected $environment;
 
-	/**
-	 * Indicates if the environment has debugging enabled or not
-	 *
-	 * @var boolean
-	 */
-	protected $debug;
+    /**
+     * Indicates if the environment has debugging enabled or not
+     *
+     * @var boolean
+     */
+    protected $debug;
 
-	/**
-	 * Cache Service for saving the fragments
-	 *
-	 * @var \AndresMontanez\FragmentCacheBundle\Library\CacheServiceInterface
-	 */
+    /**
+     * Cache Service for saving the fragments
+     *
+     * @var \AndresMontanez\FragmentCacheBundle\Library\CacheServiceInterface
+     */
     protected $cache;
 
     /**
@@ -82,9 +82,9 @@ class FragmentCacheListener implements EventSubscriberInterface
      */
     public function __construct(EventDispatcherInterface $dispatcher, $environment, $debug, $enabled, CacheServiceInterface $cache)
     {
-    	$this->dispatcher = $dispatcher;
-    	$this->environment = $environment;
-    	$this->debug = $debug;
+        $this->dispatcher = $dispatcher;
+        $this->environment = $environment;
+        $this->debug = $debug;
         $this->cache = $cache;
         $this->enabled = $enabled;
         $this->masterRequest = Request::createFromGlobals();
@@ -105,7 +105,7 @@ class FragmentCacheListener implements EventSubscriberInterface
         // Only for SubRequests
         $subRequest = $event->getRequest();
         if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
-        	return;
+            return;
         }
 
         // Check if Annotation is present
@@ -117,30 +117,30 @@ class FragmentCacheListener implements EventSubscriberInterface
         $key = $this->getKey($configuration, $subRequest, $this->masterRequest);
 
         if (!$this->enabled) {
-        	return;
+            return;
         }
 
         // If content is cached, return it
         $content = $this->cache->get($key);
         if ($content !== false) {
-        	$fragment = '';
-        	if ($this->debug) {
-        		$fragment .= '<!-- HIT - Begin Fragment Cache for KEY: ' . $key .' -->';
-        	}
+            $fragment = '';
+            if ($this->debug) {
+                $fragment .= '<!-- HIT - Begin Fragment Cache for KEY: ' . $key . ' -->';
+            }
 
-        	$fragment .= $content;
+            $fragment .= $content;
 
-        	if ($this->debug) {
-        		$fragment .= '<!-- End Fragment Cache for KEY: ' . $key .' -->';
-        	}
+            if ($this->debug) {
+                $fragment .= '<!-- End Fragment Cache for KEY: ' . $key . ' -->';
+            }
 
-    	    $response = new Response($fragment);
-	        $event->setController(function() use ($response) {
+            $response = new Response($fragment);
+            $event->setController(function () use ($response) {
                 return $response;
             });
 
         } else {
-    	    $subRequest->attributes->set('_andres_montanez_fragment_cache_key', $key);
+            $subRequest->attributes->set('_andres_montanez_fragment_cache_key', $key);
         }
 
         return;
@@ -154,15 +154,15 @@ class FragmentCacheListener implements EventSubscriberInterface
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-    	// Only for Sub Requests
+        // Only for Sub Requests
         $subRequest = $event->getRequest();
         if ($event->getRequestType() == HttpKernelInterface::MASTER_REQUEST) {
-        	return;
+            return;
         }
 
         // Check if Annotation is present
         if (!$configuration = $subRequest->attributes->get('_andres_montanez_fragment_cache', false)) {
-        	return;
+            return;
         }
 
         // If Key is present, save content for that key, expiration saved in seconds retreived in minutes
@@ -176,7 +176,7 @@ class FragmentCacheListener implements EventSubscriberInterface
 
                 $fragment = '';
                 if ($this->debug) {
-                	$fragment .= '<!-- MISS - Begin Fragment Cache for KEY: ' . $key . ' -->';
+                    $fragment .= '<!-- MISS - Begin Fragment Cache for KEY: ' . $key . ' -->';
                 }
 
                 $fragment .= $event->getResponse()->getContent();
@@ -187,20 +187,20 @@ class FragmentCacheListener implements EventSubscriberInterface
 
                 $event->getResponse()->setContent($fragment);
 
-        	} else if (!$this->enabled) {
-        		$fragment = '';
-        		if ($this->debug) {
-        			$fragment .= '<!-- DISABLED - Begin Fragment Cache for KEY: ' . $key . ' -->';
-        		}
+            } else if (!$this->enabled) {
+                $fragment = '';
+                if ($this->debug) {
+                    $fragment .= '<!-- DISABLED - Begin Fragment Cache for KEY: ' . $key . ' -->';
+                }
 
-        		$fragment .= $event->getResponse()->getContent();
+                $fragment .= $event->getResponse()->getContent();
 
-        		if ($this->debug) {
-        			$fragment .= '<!-- End Fragment Cache for KEY: ' . $key . ' -->';
-        		}
+                if ($this->debug) {
+                    $fragment .= '<!-- End Fragment Cache for KEY: ' . $key . ' -->';
+                }
 
                 $event->getResponse()->setContent($fragment);
-        	}
+            }
         }
 
         return;
@@ -209,29 +209,29 @@ class FragmentCacheListener implements EventSubscriberInterface
     /**
      * Calculates the cache Key of the Fragment
      *
-	 * @param \AndresMontanez\FragmentCacheBundle\Library\Configuration\FragmentCache $configuration
-	 * @param \Symfony\Component\HttpFoundation\Request $subRequest
-	 * @param \Symfony\Component\HttpFoundation\Request $masterRequest
+     * @param \AndresMontanez\FragmentCacheBundle\Library\Configuration\FragmentCache $configuration
+     * @param \Symfony\Component\HttpFoundation\Request $subRequest
+     * @param \Symfony\Component\HttpFoundation\Request $masterRequest
      * @return string
      */
     protected function getKey(FragmentCache $configuration, Request $subRequest, Request $masterRequest)
     {
-    	$event = new KeyGenerationEvent($configuration, $subRequest, $masterRequest);
+        $event = new KeyGenerationEvent($configuration, $subRequest, $masterRequest);
 
         $keyRequest = sha1($subRequest->getRequestUri())
-                    . ':'
-                    . sha1($masterRequest->getRequestUri());
+            . ':'
+            . sha1($masterRequest->getRequestUri());
 
         $key = array(
             'AndresMontanezFragmentCache',
-    		$this->environment,
+            $this->environment,
             'v' . $configuration->getVersion(),
             $keyRequest
         );
 
         $this->dispatcher->dispatch(KeyGenerationEvent::NAME, $event);
         if (count($event->getKeys()) > 0) {
-        	$key = array_merge($key, $event->getKeys());
+            $key = array_merge($key, $event->getKeys());
         }
 
         $key = implode(':', $key);
@@ -245,9 +245,9 @@ class FragmentCacheListener implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-    	return array(
-			KernelEvents::CONTROLLER => array('onKernelController', -128),
-			KernelEvents::RESPONSE => 'onKernelResponse',
-    	);
+        return array(
+            KernelEvents::CONTROLLER => array('onKernelController', -128),
+            KernelEvents::RESPONSE => 'onKernelResponse',
+        );
     }
 }
