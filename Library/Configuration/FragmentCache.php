@@ -14,20 +14,46 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ConfigurationAnnotation;
 
 /**
  * @Annotation
+ * Annotation for Configuration of the Fragment Cache
+ *
+ * @author Andrés Montañez <andres@andresmontanez.com>
  */
 class FragmentCache extends ConfigurationAnnotation
 {
+	/**
+	 * Expiration time in minutes
+	 *
+	 * @var integer
+	 */
 	protected $expiration;
 
+	/**
+	 * Version of the Fragment
+	 * @var itneger
+	 */
     protected $version;
 
+    /**
+     * Custom Options
+     *
+     * @var array
+     */
     protected $options;
 
+    /**
+     * Get the Expiration, returned in minutes
+     * @return integer
+     */
     public function getExpiration()
     {
-    	return (integer) $this->expiration * 60;
+    	return (integer) $this->expiration;
     }
 
+    /**
+     * Sets the Expiration, in minutes
+     * @param string $expiration
+     * @return \AndresMontanez\FragmentCacheBundle\Library\Configuration\FragmentCache
+     */
     public function setExpiration($expiration)
     {
     	if (!is_numeric($expiration)) {
@@ -35,13 +61,23 @@ class FragmentCache extends ConfigurationAnnotation
     	}
 
     	$this->expiration = $expiration;
+    	return $this;
     }
 
+    /**
+     * Get the Version
+     * @return integer
+     */
     public function getVersion()
     {
     	return (integer) $this->version;
     }
 
+    /**
+     * Sets the Version
+     * @param integer $version
+     * @return \AndresMontanez\FragmentCacheBundle\Library\Configuration\FragmentCache
+     */
     public function setVersion($version)
     {
     	if (!is_numeric($version)) {
@@ -49,26 +85,46 @@ class FragmentCache extends ConfigurationAnnotation
     	}
 
     	$this->version = $version;
+    	return $this;
     }
 
+    /**
+     * Get the Custom Options
+     * @return array
+     */
     public function getOptions()
     {
     	return $this->options;
     }
 
+    /**
+     * Sets the Custom Options
+     * @param array $options
+     * @return \AndresMontanez\FragmentCacheBundle\Library\Configuration\FragmentCache
+     */
     public function setOptions($options)
     {
     	if (!is_array($options)) {
     		$options = array();
     	}
+
     	$this->options = $options;
+    	return $this;
     }
 
+    /**
+     * Get the Alias
+     * @return string
+     */
     public function getAliasName()
     {
         return 'andres_montanez_fragment_cache';
     }
 
+    /**
+     * Indicates if allow arrays
+     * @return boolean
+     */
     public function allowArray()
     {
         return false;

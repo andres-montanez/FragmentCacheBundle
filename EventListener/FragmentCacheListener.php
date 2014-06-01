@@ -22,15 +22,64 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * Event Listener for the Fragment Cache
+ *
+ * @author Andrés Montañez <andres@andresmontanez.com>
+ */
 class FragmentCacheListener implements EventSubscriberInterface
 {
+	/**
+	 * Event Dispatcher
+	 *
+	 * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+	 */
 	protected $dispatcher;
+
+	/**
+	 * Current Environment
+	 *
+	 * @var string
+	 */
 	protected $environment;
+
+	/**
+	 * Indicates if the environment has debugging enabled or not
+	 *
+	 * @var boolean
+	 */
 	protected $debug;
+
+	/**
+	 * Cache Service for saving the fragments
+	 *
+	 * @var \AndresMontanez\FragmentCacheBundle\Library\CacheServiceInterface
+	 */
     protected $cache;
+
+    /**
+     * Indicates if Fragment Cache is enabled
+     *
+     * @var boolean
+     */
     protected $enalbed;
+
+    /**
+     * The Master Request
+     *
+     * @var \Symfony\Component\HttpFoundation\Request
+     */
     protected $masterRequest;
 
+    /**
+     * The Constructor
+     *
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
+     * @param string $environment
+     * @param boolean $debug
+     * @param boolean $enabled
+     * @param \AndresMontanez\FragmentCacheBundle\Library\CacheServiceInterface $cache
+     */
     public function __construct(EventDispatcherInterface $dispatcher, $environment, $debug, $enabled, CacheServiceInterface $cache)
     {
     	$this->dispatcher = $dispatcher;
@@ -41,6 +90,12 @@ class FragmentCacheListener implements EventSubscriberInterface
         $this->masterRequest = Request::createFromGlobals();
     }
 
+    /**
+     * Listener for the Controller call
+     *
+     * @param \Symfony\Component\HttpKernel\Event\FilterControllerEvent $event
+     * @return void
+     */
     public function onKernelController(FilterControllerEvent $event)
     {
         if (!is_array($controller = $event->getController())) {
@@ -87,8 +142,16 @@ class FragmentCacheListener implements EventSubscriberInterface
         } else {
     	    $subRequest->attributes->set('_andres_montanez_fragment_cache_key', $key);
         }
+
+        return;
     }
 
+    /**
+     * Listener for the Response call
+     *
+     * @param \Symfony\Component\HttpKernel\Event\FilterResponseEvent $event
+     * @return void
+     */
     public function onKernelResponse(FilterResponseEvent $event)
     {
     	// Only for Sub Requests
@@ -102,13 +165,13 @@ class FragmentCacheListener implements EventSubscriberInterface
         	return;
         }
 
-        // If Key is present, save content for that key
+        // If Key is present, save content for that key, expiration saved in seconds retreived in minutes
         if (($key = $subRequest->attributes->get('_andres_montanez_fragment_cache_key', false)) !== false) {
             if ($this->enabled) {
                 $this->cache->set(
                     $key,
                     $event->getResponse()->getContent(),
-                    $configuration->getExpiration()
+                    $configuration->getExpiration() * 60
                 );
 
                 $fragment = '';
@@ -139,8 +202,18 @@ class FragmentCacheListener implements EventSubscriberInterface
                 $event->getResponse()->setContent($fragment);
         	}
         }
+
+        return;
     }
 
+    /**
+     * Calculates the cache Key of the Fragment
+     *
+	 * @param \AndresMontanez\FragmentCacheBundle\Library\Configuration\FragmentCache $configuration
+	 * @param \Symfony\Component\HttpFoundation\Request $subRequest
+	 * @param \Symfony\Component\HttpFoundation\Request $masterRequest
+     * @return string
+     */
     protected function getKey(FragmentCache $configuration, Request $subRequest, Request $masterRequest)
     {
     	$event = new KeyGenerationEvent($configuration, $subRequest, $masterRequest);
@@ -165,6 +238,11 @@ class FragmentCacheListener implements EventSubscriberInterface
         return $key;
     }
 
+    /**
+     * Get the Subscribed Events
+     *
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
     	return array(

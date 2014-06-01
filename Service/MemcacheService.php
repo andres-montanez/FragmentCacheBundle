@@ -13,6 +13,11 @@ namespace AndresMontanez\FragmentCacheBundle\Service;
 use AndresMontanez\FragmentCacheBundle\Library\CacheServiceInterface;
 use Memcached;
 
+/**
+ * Cache Service implementation using Memcached library
+ *
+ * @author Andrés Montañez <andres@andresmontanez.com>
+ */
 class MemcacheService extends Memcached implements CacheServiceInterface
 {
 }
